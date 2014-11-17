@@ -49,4 +49,6 @@ Vagrant::configure("2") do |config|
 		 puppet.options="--verbose --debug"
 	end
 
+	config.vm.provision "shell", inline: "service apache2 restart", run: "always"
+
 end

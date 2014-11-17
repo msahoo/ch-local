@@ -18,6 +18,15 @@
     ensure => present,
     }
   
+    file {'/etc/php5/apache2/php.ini':
+        source  => '/vagrant/php/php.ini',
+        ensure => 'present',
+        owner   => 'root',
+        group   => 'root',
+        mode    => '644',
+        require => Package['php5'],
+    }
+
     # upgrade pear
     exec {"pear upgrade":
       command => "/usr/bin/pear upgrade",
