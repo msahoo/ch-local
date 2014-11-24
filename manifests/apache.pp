@@ -1,5 +1,5 @@
 #Apache
-package { ['php5', 'apache2', 'git-core']:
+package { ['php5', 'apache2', 'git-core', 'subversion']:
     ensure => installed,
 }
 
@@ -9,9 +9,15 @@ exec  {'apache_stop':
 	require => Package['apache2'],
 }
 
-file {'/etc/apache2/sites-available/000-default.conf':
-	source  => '/vagrant/apache/etc/apache2/sites-enabled/000-default',
-	ensure => 'present',
+exec  {'apache_start':
+	path => '/usr/bin',
+	command => 'sudo service apache2 start',
+}
+
+
+file {'/etc/apache2/sites-enabled/ch9.conf':
+	source  => '/vagrant/apache/etc/apache2/sites-enabled/ch9.conf',
+	ensure => 'file',
 	owner   => 'root',
 	group   => 'root',
 	mode    => '777',
@@ -20,6 +26,15 @@ file {'/etc/apache2/sites-available/000-default.conf':
 	#notify  => File['/etc/apache2/apache2.conf'],
 }
 
+file {'/etc/apache2/apache2.conf':
+	source  => '/vagrant/apache/apache2.conf',
+	ensure => 'file',
+	owner   => 'root',
+	group   => 'root',
+	mode    => '777',
+	require => Exec['apache_stop'],
+	notify  => Exec['apache_start'],
+}
 
 
 define apache::loadmodule () {
@@ -32,30 +47,3 @@ define apache::loadmodule () {
 
 apache::loadmodule{"rewrite": }
 apache::loadmodule{"headers": }
-
-#file {'/etc/apache2/apache2.conf':
-#	source  => '/vagrant/apache/etc/httpd.conf',
-#	ensure => 'present',
-#	owner   => 'root',
-#	group   => 'root',
-#	mode    => '777',
-#	require => Exec['apache_stop'],
-#	notify  => Exec['apache_start'],
-
-#}
-
-
-#file {'/etc/apache2/mods-enabled/rewrite.load':
-#	source  => '/etc/apache2/mods-available/rewrite.load',
-#	ensure => 'present',
-#	owner   => 'root',
-#	group   => 'root',
-#	mode    => '777',
-#	require => Exec['apache_stop'],
-#	notify  => Exec['apache_start'],
-#}
-
-exec  {'apache_start':
-	path => '/usr/bin',
-	command => 'sudo service apache2 start',
-}

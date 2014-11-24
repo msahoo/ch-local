@@ -20,7 +20,16 @@
   
     file {'/etc/php5/apache2/php.ini':
         source  => '/vagrant/php/php.ini',
-        ensure => 'present',
+        ensure => 'file',
+        owner   => 'root',
+        group   => 'root',
+        mode    => '644',
+        require => Package['php5'],
+    }
+
+    file {'/etc/php5/apache2/conf.d/20-xdebug.ini':
+        source  => '/vagrant/php/xdebug.ini',
+        ensure => 'file',
         owner   => 'root',
         group   => 'root',
         mode    => '644',
