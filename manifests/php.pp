@@ -27,7 +27,7 @@
         require => Package['php5'],
     }
 
-    file {'/etc/php5/apache2/conf.d/20-xdebug.ini':
+    file {'/etc/php5/mods-available/xdebug.ini':
         source  => '/vagrant/php/xdebug.ini',
         ensure => 'file',
         owner   => 'root',
